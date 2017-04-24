@@ -1,8 +1,8 @@
 function [C, sigma] = dataset3Params(X, y, Xval, yval)
-%EX6PARAMS returns your choice of C and sigma for Part 3 of the exercise
+%DATASET3PARAMS returns your choice of C and sigma for Part 3 of the exercise
 %where you select the optimal (C, sigma) learning parameters to use for SVM
 %with RBF kernel
-%   [C, sigma] = EX6PARAMS(X, y, Xval, yval) returns your choice of C and 
+%   [C, sigma] = DATASET3PARAMS(X, y, Xval, yval) returns your choice of C and 
 %   sigma. You should complete this function to return the optimal C and 
 %   sigma based on a cross-validation set.
 %
@@ -22,7 +22,19 @@ sigma = 0.3;
 %  Note: You can compute the prediction error using 
 %        mean(double(predictions ~= yval))
 %
-
+error = 1;
+for c_item = [0.01,0.03,0.1,0.3,1,3,10,30]
+    for sigma_item = [0.01,0.03,0.1,0.3,1,3,10,30]
+        model = model= svmTrain(X, y, c_item, @(x1, x2) gaussianKernel(x1, x2, sigma_item));
+        predictions = svmPredict(model, Xval);
+        tmp = mean(double(predictions ~= yval));
+        if error > tmp
+            error = tmp;
+            C=c_item;
+            sigma = sigma_item;
+        end
+    end
+end
 
 
 
